@@ -26,7 +26,7 @@ export class AppService {
   constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
   private readonly characteristicsFnUrl =
-    "https://functions.yandexcloud.net/d4eja3aglipp5f8hfb73";
+    "https://monstercharacteristics-production.up.railway.app/characteristics";
 
   /**
    * Полная логика исходной функции:
