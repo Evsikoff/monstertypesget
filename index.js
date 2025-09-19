@@ -1,1 +1,2 @@
-console.log("Hello CodeSandbox");
+// как в образце: стартуем собранный main.js
+require("./dist/main.js");

@@ -1,32 +1,45 @@
-import { BadRequestException, Controller, Post, Body } from "@nestjs/common";
-import { AppService } from "./app.service";
-
-type MonsterImpactsRequest = { monsterId: number };
-type MonsterImpact = {
-  id: number;
-  image: string | null;
-  name: string;
-  comment: string | null;
-  method: string | null;
-  energyprice: number | null;
-  minendurance: number | null;
-  available: boolean | null;
-};
-type MonsterImpactsResponse = { monsterimpacts: MonsterImpact[] };
+import { Body, Controller, Get, HttpStatus, Post, Res } from "@nestjs/common";
+import { Response } from "express";
+import { AppService, ExecuteInput } from "./app.service";
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post("monster-impacts")
-  async getMonsterImpacts(
-    @Body() body: MonsterImpactsRequest
-  ): Promise<MonsterImpactsResponse> {
-    const monsterId = body?.monsterId;
-    if (!Number.isInteger(monsterId)) {
-      throw new BadRequestException("Некорректный или отсутствующий monsterId");
+  @Get("health")
+  health(@Res() res: Response) {
+    return res.status(HttpStatus.OK).json({ ok: true });
+  }
+
+  // Основной маршрут по ТЗ: вернуть массив monstertypes
+  @Get("monstertypes")
+  async getMonstertypes(@Res() res: Response) {
+    try {
+      const monstertypes = await this.appService.getMonstertypes();
+      return res.status(HttpStatus.OK).json({ monstertypes });
+    } catch (e: any) {
+      if (e?.code === "DB_CONNECT_ERROR") {
+        return res
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .json({ errorText: "Ошибка подключения к базе данных" });
+      }
+      console.error("Unexpected error in /monstertypes:", e);
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ errorText: "Внутренняя ошибка сервера" });
     }
-    const monsterimpacts = await this.appService.buildMonsterImpacts(monsterId);
-    return { monsterimpacts };
+  }
+
+  // Пример POST, как в образце (оставлен для совместимости с структурой)
+  @Post("execute")
+  async execute(@Body() body: ExecuteInput, @Res() res: Response) {
+    try {
+      // просто эхо, чтобы маршрут существовал (как «каркас»)
+      return res.status(HttpStatus.OK).json({ received: body ?? null });
+    } catch (e: any) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ errorText: "Внутренняя ошибка сервера." });
+    }
   }
 }

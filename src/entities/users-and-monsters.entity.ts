@@ -1,15 +1,13 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity("usersandmonsters")
+@Entity({ name: "usersandmonsters" })
 export class UsersAndMonsters {
   @PrimaryGeneratedColumn()
-  id: number; // Assuming an ID field; adjust if needed
+  id!: number;
 
-  @Column()
-  userid: number;
+  @Column({ type: "int", nullable: false })
+  userid!: number;
 
-  @Column()
-  monsterid: number;
-
-  // Add other fields if known
+  @Column({ type: "int", nullable: false })
+  monsterid!: number;
 }

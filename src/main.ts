@@ -4,16 +4,16 @@ import { AppModule } from "./app.module";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Включаем CORS
+  // CORS — как в образце
   app.enableCors({
-    origin: true, // Разрешаем запросы с любых доменов (для разработки)
-    // Для продакшена лучше указать конкретные домены:
-    // origin: ['http://localhost:3000', 'http://localhost:3001', 'https://yourdomain.com'],
+    origin: true, // для dev
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // Если нужны cookies/authentication
+    credentials: true,
   });
 
-  await app.listen(3000);
+  const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
+  await app.listen(PORT, "0.0.0.0");
+  console.log(`Server listening on http://0.0.0.0:${PORT}`);
 }
 bootstrap();
