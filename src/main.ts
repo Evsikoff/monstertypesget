@@ -4,16 +4,16 @@ import { AppModule } from "./app.module";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Включаем CORS
+  // Включаем CORS - важно для работы в Replit environment
   app.enableCors({
     origin: true, // Разрешаем запросы с любых доменов (для разработки)
-    // Для продакшена лучше указать конкретные домены:
-    // origin: ['http://localhost:3000', 'http://localhost:3001', 'https://yourdomain.com'],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true, // Если нужны cookies/authentication
   });
 
-  await app.listen(3000);
+  const port = process.env.PORT || 5000;
+  await app.listen(port, "0.0.0.0");
+  console.log(`Application is running on: http://0.0.0.0:${port}`);
 }
 bootstrap();
