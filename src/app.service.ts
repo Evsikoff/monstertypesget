@@ -52,10 +52,10 @@ export class AppService {
   }
 
   // === ЛОГИКА ПО ТЗ ===
-  // Получить все монстр-тайпы: SELECT number, name, activity, image, price FROM monstertypes
+  // Получить все монстр-тайпы: SELECT number, name, activity, image, price, vkvoice FROM monstertypes
   async getMonstertypes() {
     const sql =
-      "SELECT number, name, activity, image, price FROM monstertypes ORDER BY number ASC";
+      "SELECT number, name, activity, image, price, vkvoice FROM monstertypes ORDER BY number ASC";
     const { rows } = await this.pool.query(sql);
 
     const monstertypes = [];
@@ -66,6 +66,7 @@ export class AppService {
         activity: Boolean(r.activity),
         image: String(r.image),
         price: Number(r.price),
+        vkprice: Number(r.vkvoice), // согласно алгоритму: vkprice = vkvoice из БД
       });
     }
     return monstertypes;
